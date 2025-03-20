@@ -111,6 +111,8 @@ def compile_project():
             project_data['screens'] = data['screens']
         if 'version' in data:
             project_data['version'] = data['version']
+        if 'missing_components' in data:
+            project_data['missing_components'] = data['missing_components']
             
         # Compile the project
         app.logger.info(f"Compiling project {filename} with data: {project_data}")

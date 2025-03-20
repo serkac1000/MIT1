@@ -125,6 +125,58 @@ function displayProjectInfo(project) {
     document.getElementById('project-screens').textContent = project.screens.join(', ') || 'None';
     document.getElementById('project-components').textContent = project.components.join(', ') || 'None';
     document.getElementById('project-version').textContent = project.version || 'Unknown';
+    
+    // Display missing components info if available
+    if (project.missing_components && project.missing_components.length > 0) {
+        // Find project-details to add missing components section
+        const projectDetails = document.querySelector('.project-details');
+        
+        // Check if we already have a missing components section
+        let missingComponentsRow = document.getElementById('missing-components-row');
+        if (!missingComponentsRow) {
+            // Create it if it doesn't exist
+            missingComponentsRow = document.createElement('div');
+            missingComponentsRow.id = 'missing-components-row';
+            missingComponentsRow.className = 'row';
+            missingComponentsRow.innerHTML = `
+                <div class="col-md-4 font-weight-bold text-danger">Missing Components:</div>
+                <div class="col-md-8 text-danger" id="missing-components-list"></div>
+            `;
+            projectDetails.appendChild(missingComponentsRow);
+        }
+        
+        // Populate the missing components list
+        const missingComponentsList = document.getElementById('missing-components-list');
+        const missingComponentsText = project.missing_components.map(item => 
+            `${item.component} (in ${item.screen})`
+        ).join(', ');
+        
+        missingComponentsList.textContent = missingComponentsText;
+        
+        // Add a warning message
+        let warningMessage = document.getElementById('missing-components-warning');
+        if (!warningMessage) {
+            warningMessage = document.createElement('div');
+            warningMessage.id = 'missing-components-warning';
+            warningMessage.className = 'alert alert-warning mt-3';
+            warningMessage.innerHTML = `
+                <strong>Warning:</strong> Some components are referenced in your blocks but not added to your screens.
+                <p>Your app may not work correctly without these components. Consider adding them in MIT App Inventor before using the compiled app.</p>
+            `;
+            projectDetails.after(warningMessage);
+        }
+    } else {
+        // Remove missing components sections if they exist but there are no missing components
+        const missingComponentsRow = document.getElementById('missing-components-row');
+        if (missingComponentsRow) {
+            missingComponentsRow.remove();
+        }
+        
+        const warningMessage = document.getElementById('missing-components-warning');
+        if (warningMessage) {
+            warningMessage.remove();
+        }
+    }
 }
 
 // Compile the project
@@ -137,8 +189,16 @@ function compileProject() {
         projectName: currentProject.projectName,
         filename: currentProject.filename || projectFileName,
         target: document.getElementById('compilation-target').value,
-        optimize: document.getElementById('optimize-apk').checked
+        optimize: document.getElementById('optimize-apk').checked,
+        components: currentProject.components || [],
+        screens: currentProject.screens || [],
+        version: currentProject.version || ''
     };
+    
+    // Add missing components info if available
+    if (currentProject.missing_components && currentProject.missing_components.length > 0) {
+        compilationOptions.missing_components = currentProject.missing_components;
+    }
     
     // Update progress for visual feedback
     updateCompilationProgress(25, 'Processing project files...');

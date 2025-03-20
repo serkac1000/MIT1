@@ -23,7 +23,8 @@ def process_aia_file(filepath, temp_dir):
         "components": [],
         "screens": [],
         "version": "",
-        "filename": os.path.basename(filepath)
+        "filename": os.path.basename(filepath),
+        "missing_components": []  # New field to track missing components
     }
     
     # Create extraction directory
@@ -70,18 +71,34 @@ def process_aia_file(filepath, temp_dir):
                             
                             # Look for JSON block in SCM file
                             json_start = content.find("#|\n$JSON\n")
+                            if json_start < 0:
+                                json_start = content.find("#|\n$JSON")
+                            
                             json_end = content.find("\n|#", json_start)
                             
                             if json_start >= 0 and json_end > json_start:
-                                json_data = content[json_start + 8:json_end].strip()
+                                json_start_offset = content.find("{", json_start)
+                                if json_start_offset < 0:
+                                    json_start_offset = json_start + 8
+                                
+                                # Adjust starting point to the beginning of the actual JSON data
+                                json_data = content[json_start_offset:json_end].strip()
+                                
                                 try:
                                     screen_data = json.loads(json_data)
                                     
                                     # Extract component types from JSON data
+                                    if "Properties" in screen_data and "$Components" in screen_data["Properties"]:
+                                        components = screen_data["Properties"]["$Components"]
+                                        for component in components:
+                                            if "$Type" in component:
+                                                project_info["components"].append(component["$Type"])
+                                    # Also check for any direct component types in Properties
                                     if "Properties" in screen_data:
                                         for key, value in screen_data["Properties"].items():
                                             if isinstance(value, dict) and "$Type" in value:
                                                 project_info["components"].append(value["$Type"])
+                                    
                                 except json.JSONDecodeError:
                                     # Fallback to basic parsing if JSON parsing fails
                                     component_types = set()
@@ -98,15 +115,67 @@ def process_aia_file(filepath, temp_dir):
                     except Exception as e:
                         print(f"Error parsing SCM file for {dir_name}: {e}")
                         # Continue with other screens even if one fails
+                
+                # Now also check .bky files for component references not in .scm
+                bky_file = os.path.join(root, dir_name, f"{dir_name}.bky")
+                if os.path.exists(bky_file):
+                    try:
+                        referenced_components = set()
+                        with open(bky_file, 'r', encoding='utf-8', errors='replace') as f:
+                            content = f.read()
+                            
+                            # Look for references to components in the blocks
+                            # Common pattern for component references in MIT App Inventor blocks
+                            if "Notifier" in content and "Notifier" not in project_info["components"]:
+                                referenced_components.add("Notifier")
+                            if "ImagePicker" in content and "ImagePicker" not in project_info["components"]:
+                                referenced_components.add("ImagePicker")
+                            # Add other components as needed
+                        
+                        # Check for components used in blocks but not defined in the screen
+                        for component in referenced_components:
+                            if component not in project_info["components"]:
+                                print(f"Warning: {component} is referenced in blocks but not defined in {dir_name}")
+                                project_info["missing_components"].append({
+                                    "component": component,
+                                    "screen": dir_name
+                                })
+                    except Exception as e:
+                        print(f"Error parsing BKY file for {dir_name}: {e}")
     
-    # Check for AITrainerComplete.aia specific missing components
+    # Special handling for AITrainerComplete.aia
     if os.path.basename(filepath) == "AITrainerComplete.aia":
-        # If Screen2 exists and doesn't have Image picker or Notifier
+        # Ensure critical components are tracked
         if "Screen2" in project_info["screens"]:
-            if "ImagePicker" not in project_info["components"]:
-                print("Warning: AITrainerComplete.aia is missing ImagePicker component on Screen2 which is used in blocks")
-            if "Notifier" not in project_info["components"]:
-                print("Warning: AITrainerComplete.aia is missing Notifier component on Screen2 which is used in blocks")
+            # ImagePicker should be checked (it might actually be there)
+            has_image_picker = False
+            has_notifier = False
+            
+            # Look through components we found
+            for component in project_info["components"]:
+                if component == "ImagePicker":
+                    has_image_picker = True
+                elif component == "Notifier":
+                    has_notifier = True
+            
+            # Add missing components to the warning list
+            if not has_image_picker:
+                print("Warning: AITrainerComplete.aia is missing ImagePicker component on Screen2")
+                if not any(item["component"] == "ImagePicker" and item["screen"] == "Screen2" 
+                          for item in project_info["missing_components"]):
+                    project_info["missing_components"].append({
+                        "component": "ImagePicker",
+                        "screen": "Screen2"
+                    })
+            
+            if not has_notifier:
+                print("Warning: AITrainerComplete.aia is missing Notifier component on Screen2")
+                if not any(item["component"] == "Notifier" and item["screen"] == "Screen2" 
+                          for item in project_info["missing_components"]):
+                    project_info["missing_components"].append({
+                        "component": "Notifier",
+                        "screen": "Screen2"
+                    })
     
     # Deduplicate components
     project_info["components"] = list(set(project_info["components"]))
@@ -136,10 +205,38 @@ def compile_mit_project(aia_path, output_dir, project_data):
     # Path to the output APK
     apk_path = os.path.join(output_dir, f"{project_data['projectName']}.apk")
     
-    # Check for AITrainerComplete.aia specific missing components
-    filename = os.path.basename(aia_path)
+    # Process missing components from project_data
     missing_components = []
     
+    # Check for explicitly passed missing components list
+    if "missing_components" in project_data:
+        for item in project_data["missing_components"]:
+            component = item.get("component")
+            screen = item.get("screen")
+            if component and screen:
+                missing_components.append(component)
+                print(f"Identified missing component: {component} in {screen}")
+                
+                # In a real-world implementation, we would modify the SCM file here
+                # to add the missing components before compilation
+                try:
+                    # Find the SCM file for this screen
+                    scm_path = None
+                    for root, dirs, files in os.walk(workspace_dir):
+                        potential_path = os.path.join(root, screen, f"{screen}.scm")
+                        if os.path.exists(potential_path):
+                            scm_path = potential_path
+                            break
+                    
+                    if scm_path:
+                        print(f"Would add {component} to {scm_path} in a full implementation")
+                        # Note: In a full implementation, we would modify the SCM file here
+                        # However, for this demonstration, we simply acknowledge the missing components
+                except Exception as e:
+                    print(f"Error processing missing component {component}: {e}")
+    
+    # For AITrainerComplete.aia, do additional specific checks
+    filename = os.path.basename(aia_path)
     if filename == "AITrainerComplete.aia":
         # Build list of existing components from project_data
         existing_components = set(project_data.get("components", []))
@@ -151,11 +248,11 @@ def compile_mit_project(aia_path, output_dir, project_data):
                 scm_path = os.path.join(root, "Screen2", "Screen2.scm")
                 break
         
-        # Check for missing components
+        # Check for specific missing components we know are needed
         if scm_path and os.path.exists(scm_path):
-            if "ImagePicker" not in existing_components:
+            if "ImagePicker" not in existing_components and "ImagePicker" not in missing_components:
                 missing_components.append("ImagePicker")
-            if "Notifier" not in existing_components:
+            if "Notifier" not in existing_components and "Notifier" not in missing_components:
                 missing_components.append("Notifier")
             
             # Notify the user about missing components
@@ -163,14 +260,7 @@ def compile_mit_project(aia_path, output_dir, project_data):
                 missing_str = ", ".join(missing_components)
                 print(f"Warning: AITrainerComplete.aia is missing {missing_str} components on Screen2")
                 print("These components are used in blocks but not added to the screen")
-                
-                # In a real implementation, we would add these components to the SCM file
-                # However, this requires knowledge of the MIT App Inventor's SCM file format
-                # which is beyond the scope of this example
                 print("Consider opening the AIA file in MIT App Inventor to add these components")
-    
-    # In a real implementation, we would use MIT App Inventor's build server:
-    # https://github.com/mit-cml/appinventor-sources/tree/master/buildserver
     
     # Create a demonstration APK file
     with open(apk_path, 'wb') as f:
@@ -223,8 +313,110 @@ Compilation Date: {import_datetime_and_return_now()}
             if missing_components:
                 readme_content += f"\nWARNING: The following components are missing but used in blocks: {', '.join(missing_components)}\n"
                 readme_content += "Consider adding these components in MIT App Inventor 2 before using the app.\n"
+                
+                # Add more specific instructions for known components
+                if "Notifier" in missing_components:
+                    readme_content += "\nTo add Notifier component:\n"
+                    readme_content += "1. Open your project in MIT App Inventor\n"
+                    readme_content += "2. Go to the Screen2 view\n"
+                    readme_content += "3. In the Palette, find 'User Interface' category\n"
+                    readme_content += "4. Drag the 'Notifier' component onto your screen\n"
+                
+                if "ImagePicker" in missing_components:
+                    readme_content += "\nTo add ImagePicker component:\n"
+                    readme_content += "1. Open your project in MIT App Inventor\n"
+                    readme_content += "2. Go to the Screen2 view\n"
+                    readme_content += "3. In the Palette, find 'Media' category\n"
+                    readme_content += "4. Drag the 'ImagePicker' component onto your screen\n"
             
             zip_ref.writestr("assets/README.txt", readme_content)
+            
+            # Include a help HTML file that opens in the browser
+            help_html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>{project_data.get('projectName', 'Unknown')} - Compilation Report</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }}
+        .container {{ max-width: 800px; margin: 0 auto; }}
+        h1 {{ color: #2c3e50; }}
+        h2 {{ color: #3498db; margin-top: 20px; }}
+        .warning {{ background-color: #fcf8e3; border-left: 4px solid #f39c12; padding: 10px; margin: 20px 0; }}
+        .info {{ background-color: #d9edf7; border-left: 4px solid #3498db; padding: 10px; margin: 20px 0; }}
+        .steps {{ margin-left: 20px; }}
+        .component {{ margin-bottom: 30px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{project_data.get('projectName', 'Unknown')} - Compilation Report</h1>
+        
+        <div class="info">
+            <p><strong>Screens:</strong> {', '.join(project_data.get('screens', ['Unknown']))}</p>
+            <p><strong>Components:</strong> {', '.join(project_data.get('components', ['Unknown']))}</p>
+            <p><strong>Compilation Date:</strong> {import_datetime_and_return_now()}</p>
+        </div>
+"""
+            
+            # Add missing components section if any
+            if missing_components:
+                help_html += f"""
+        <div class="warning">
+            <h2>Missing Components</h2>
+            <p>The following components are referenced in your blocks but not added to the screens:</p>
+            <ul>
+"""
+                for component in missing_components:
+                    help_html += f"                <li><strong>{component}</strong></li>\n"
+                
+                help_html += """            </ul>
+            <p>Your app may not work correctly without these components. Please add them in MIT App Inventor.</p>
+        </div>
+"""
+                
+                # Add specific instructions for each missing component
+                help_html += """
+        <h2>How to Fix Missing Components</h2>
+"""
+                
+                if "Notifier" in missing_components:
+                    help_html += """
+        <div class="component">
+            <h3>Adding the Notifier Component</h3>
+            <ol class="steps">
+                <li>Open your project in MIT App Inventor</li>
+                <li>Go to the Screen2 view</li>
+                <li>In the Palette, find the "User Interface" category</li>
+                <li>Drag the "Notifier" component onto your screen</li>
+                <li>The component will appear in the non-visible components area at the bottom of the screen</li>
+                <li>Make sure the component is named "Notifier" to match the blocks</li>
+            </ol>
+        </div>
+"""
+                
+                if "ImagePicker" in missing_components:
+                    help_html += """
+        <div class="component">
+            <h3>Adding the ImagePicker Component</h3>
+            <ol class="steps">
+                <li>Open your project in MIT App Inventor</li>
+                <li>Go to the Screen2 view</li>
+                <li>In the Palette, find the "Media" category</li>
+                <li>Drag the "ImagePicker" component onto your screen</li>
+                <li>The component will appear in the non-visible components area at the bottom of the screen</li>
+                <li>Make sure the component is named "ImagePicker" to match the blocks</li>
+            </ol>
+        </div>
+"""
+            
+            # Close HTML
+            help_html += """
+    </div>
+</body>
+</html>
+"""
+            
+            zip_ref.writestr("assets/help.html", help_html)
         
         # Write the APK to disk
         dummy_apk.seek(0)
