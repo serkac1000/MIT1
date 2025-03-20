@@ -77,40 +77,48 @@ def compile_project():
         return jsonify({"error": "Missing filename"}), 400
         
     temp_dir = None
-    upload_temp_dir = None
+    output_dir = None
     
     try:
         # Create a temporary directory for compilation
         temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
-        upload_temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
+        output_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
         
-        # Create a temporary file for the uploaded AIA
+        # Get the filename from the request data
         filename = secure_filename(data['filename'])
-        file_path = os.path.join(upload_temp_dir, filename)
         
-        # Check if this is a test compilation request
-        if os.path.exists(file_path):
-            # File exists (unlikely but possible if a previous request was made)
-            pass
-        else:
-            # In a production app, you might want to store uploaded files in a database
-            # or a more persistent storage. For now, we'll create a mock AIA file
-            # just to demonstrate the compilation flow.
-            with open(file_path, 'wb') as f:
-                # Create a minimal valid ZIP file that resembles an AIA
-                temp_zip = BytesIO()
-                with zipfile.ZipFile(temp_zip, 'w') as zip_file:
-                    # Add a minimal manifest
-                    zip_file.writestr('youngandroidproject/project.properties', 
-                                     f'main=appinventor.ai_user.{data["projectName"]}\nname={data["projectName"]}')
-                    zip_file.writestr(f'src/appinventor/ai_user/{data["projectName"]}/Screen1.scm', 
-                                     '#|\n$JSON\n{"authURL":["ai2.appinventor.mit.edu"],"YaVersion":"167","Source":"Form","Properties":{"$Name":"Screen1","$Type":"Form","$Version":"20","Title":"Screen1","Uuid":"0"}}\n|#\n\n(do-after-form-creation (set-and-coerce-property! \'Screen1 \'Title "Screen1" \'text))')
-                temp_zip.seek(0)
-                f.write(temp_zip.read())
+        # Search for uploaded file in the upload folder (from the previous upload step)
+        file_path = None
+        for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+            if filename in files:
+                file_path = os.path.join(root, filename)
+                break
         
+        # If file not found, return an error
+        if not file_path or not os.path.exists(file_path):
+            return jsonify({"error": f"File {filename} not found. Please upload the file again."}), 404
+        
+        # Create project data object for compilation
+        project_data = {
+            "projectName": data.get('projectName', 'MIT_App'),
+            "filename": filename
+        }
+        
+        # Add other properties passed in the request
+        if 'components' in data:
+            project_data['components'] = data['components']
+        if 'screens' in data:
+            project_data['screens'] = data['screens']
+        if 'version' in data:
+            project_data['version'] = data['version']
+            
         # Compile the project
-        apk_path = compile_mit_project(file_path, temp_dir, data)
+        app.logger.info(f"Compiling project {filename} with data: {project_data}")
+        apk_path = compile_mit_project(file_path, output_dir, project_data)
         
+        if not os.path.exists(apk_path):
+            return jsonify({"error": "Failed to generate APK file"}), 500
+            
         # Create a BytesIO object to store the APK file
         apk_buffer = BytesIO()
         
@@ -122,7 +130,7 @@ def compile_project():
         apk_buffer.seek(0)
         
         # Generate filename for download
-        download_filename = f"{data['projectName']}.apk"
+        download_filename = f"{project_data['projectName']}.apk"
         
         # Return the APK file
         return send_file(
@@ -145,9 +153,9 @@ def compile_project():
             except Exception:
                 pass
                 
-        if upload_temp_dir and os.path.exists(upload_temp_dir):
+        if output_dir and os.path.exists(output_dir):
             try:
-                shutil.rmtree(upload_temp_dir)
+                shutil.rmtree(output_dir)
             except Exception:
                 pass
 
