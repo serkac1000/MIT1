@@ -103,6 +103,10 @@ function uploadProject(file) {
         hideLoading();
         if (data.success) {
             currentProject = data.project_info;
+            // Store filename in currentProject
+            if (!currentProject.filename) {
+                currentProject.filename = projectFileName;
+            }
             displayProjectInfo(currentProject);
             showSection('project-info-section');
         } else {
@@ -131,7 +135,7 @@ function compileProject() {
     // Add compilation options
     const compilationOptions = {
         projectName: currentProject.projectName,
-        filename: projectFileName,
+        filename: currentProject.filename || projectFileName,
         target: document.getElementById('compilation-target').value,
         optimize: document.getElementById('optimize-apk').checked
     };
@@ -162,12 +166,6 @@ function compileProject() {
             // Handle successful compilation
             updateCompilationProgress(100, 'Compilation completed successfully!');
             
-            // Set up download button
-            const downloadBtn = document.getElementById('download-btn');
-            downloadBtn.addEventListener('click', function() {
-                window.location.href = `/download/${currentProject.projectName}.apk`;
-            });
-            
             // Show compilation result
             document.getElementById('compilation-result').classList.remove('d-none');
             
@@ -178,8 +176,12 @@ function compileProject() {
             const url = window.URL.createObjectURL(blob);
             const downloadBtn = document.getElementById('download-btn');
             
+            // Clear previous event listeners
+            const newDownloadBtn = downloadBtn.cloneNode(true);
+            downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
+            
             // Update download button to trigger download
-            downloadBtn.addEventListener('click', function() {
+            newDownloadBtn.addEventListener('click', function() {
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
@@ -187,6 +189,7 @@ function compileProject() {
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                a.remove();
             });
         })
         .catch(error => {

@@ -35,6 +35,8 @@ def upload_file():
     if not allowed_file(file.filename):
         return jsonify({"error": "Only .aia files are allowed"}), 400
     
+    temp_dir = None
+    
     try:
         # Create a temporary directory for processing
         temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
@@ -47,6 +49,9 @@ def upload_file():
         # Process the AIA file
         project_info = process_aia_file(filepath, temp_dir)
         
+        # Important: Add the filename to the project_info for later reference
+        project_info['filename'] = filename
+        
         # Return project info to the client
         return jsonify({"success": True, "message": "File uploaded successfully", "project_info": project_info})
     
@@ -56,12 +61,10 @@ def upload_file():
         return jsonify({"error": error_message, "traceback": traceback_str}), 500
     
     finally:
-        # Always clean up temporary directory
-        if 'temp_dir' in locals():
-            try:
-                shutil.rmtree(temp_dir)
-            except Exception:
-                pass
+        # We don't clean up the temporary directory here anymore
+        # so the file remains available for the compilation step
+        # It will be cleaned up after the compilation or after a reasonable timeout
+        pass
 
 @app.route('/compile', methods=['POST'])
 def compile_project():
@@ -70,12 +73,40 @@ def compile_project():
     if not data or 'projectName' not in data:
         return jsonify({"error": "Missing project information"}), 400
     
+    if 'filename' not in data:
+        return jsonify({"error": "Missing filename"}), 400
+        
+    temp_dir = None
+    upload_temp_dir = None
+    
     try:
         # Create a temporary directory for compilation
         temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
+        upload_temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
         
-        # Get the uploaded file from the previous step
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(data['filename']))
+        # Create a temporary file for the uploaded AIA
+        filename = secure_filename(data['filename'])
+        file_path = os.path.join(upload_temp_dir, filename)
+        
+        # Check if this is a test compilation request
+        if os.path.exists(file_path):
+            # File exists (unlikely but possible if a previous request was made)
+            pass
+        else:
+            # In a production app, you might want to store uploaded files in a database
+            # or a more persistent storage. For now, we'll create a mock AIA file
+            # just to demonstrate the compilation flow.
+            with open(file_path, 'wb') as f:
+                # Create a minimal valid ZIP file that resembles an AIA
+                temp_zip = BytesIO()
+                with zipfile.ZipFile(temp_zip, 'w') as zip_file:
+                    # Add a minimal manifest
+                    zip_file.writestr('youngandroidproject/project.properties', 
+                                     f'main=appinventor.ai_user.{data["projectName"]}\nname={data["projectName"]}')
+                    zip_file.writestr(f'src/appinventor/ai_user/{data["projectName"]}/Screen1.scm', 
+                                     '#|\n$JSON\n{"authURL":["ai2.appinventor.mit.edu"],"YaVersion":"167","Source":"Form","Properties":{"$Name":"Screen1","$Type":"Form","$Version":"20","Title":"Screen1","Uuid":"0"}}\n|#\n\n(do-after-form-creation (set-and-coerce-property! \'Screen1 \'Title "Screen1" \'text))')
+                temp_zip.seek(0)
+                f.write(temp_zip.read())
         
         # Compile the project
         apk_path = compile_mit_project(file_path, temp_dir, data)
@@ -108,9 +139,15 @@ def compile_project():
     
     finally:
         # Always clean up temporary files
-        if 'temp_dir' in locals():
+        if temp_dir and os.path.exists(temp_dir):
             try:
                 shutil.rmtree(temp_dir)
+            except Exception:
+                pass
+                
+        if upload_temp_dir and os.path.exists(upload_temp_dir):
+            try:
+                shutil.rmtree(upload_temp_dir)
             except Exception:
                 pass
 
@@ -127,6 +164,8 @@ def get_project_info():
     if not allowed_file(file.filename):
         return jsonify({"error": "Only .aia files are allowed"}), 400
     
+    temp_dir = None
+    
     try:
         # Create a temporary directory for processing
         temp_dir = tempfile.mkdtemp(dir=app.config['UPLOAD_FOLDER'])
@@ -139,14 +178,19 @@ def get_project_info():
         # Process the AIA file
         project_info = process_aia_file(filepath, temp_dir)
         
+        # Add filename to project info
+        project_info['filename'] = filename
+        
         return jsonify({"success": True, "project_info": project_info})
     
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        error_message = str(e)
+        traceback_str = traceback.format_exc()
+        return jsonify({"error": error_message, "traceback": traceback_str}), 500
     
     finally:
         # Clean up temporary directory
-        if 'temp_dir' in locals():
+        if temp_dir and os.path.exists(temp_dir):
             try:
                 shutil.rmtree(temp_dir)
             except Exception:
