@@ -1,0 +1,1084 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="1" x="20" y="20">
+    <mutation component_type="Button" instance_name="ButtonBack" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonBack</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="2">
+        <value name="SCREEN">
+          <block type="text" id="3">
+            <field name="TEXT">Screen1</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="4" x="20" y="100">
+    <mutation component_type="Form" instance_name="Screen3" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen3</field>
+    <statement name="DO">
+      <block type="lexical_variable_set" id="5">
+        <field name="VAR">global currentPoseIndex</field>
+        <value name="VALUE">
+          <block type="math_number" id="6">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+      <block type="lexical_variable_set" id="7">
+        <field name="VAR">global isTraining</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="8">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="lexical_variable_set" id="9">
+        <field name="VAR">global holdTime</field>
+        <value name="VALUE">
+          <block type="math_number" id="10">
+            <field name="NUM">3</field>
+          </block>
+        </value>
+      </block>
+      <block type="lexical_variable_set" id="11">
+        <field name="VAR">global currentHoldTime</field>
+        <value name="VALUE">
+          <block type="math_number" id="12">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+      </block>
+      <block type="lexical_variable_set" id="13">
+        <field name="VAR">global audioFeedback</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="14">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_set_get" id="15">
+        <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonPrevPose"></mutation>
+        <field name="COMPONENT_SELECTOR">ButtonPrevPose</field>
+        <field name="PROP">Enabled</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="16">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_if" id="17">
+        <value name="IF0">
+          <block type="logic_compare" id="18">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="19">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="20">
+                    <field name="TEXT">holdTime</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="21">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="22">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="23">
+            <field name="VAR">global holdTime</field>
+            <value name="VALUE">
+              <block type="component_method" id="24">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="25">
+                    <field name="TEXT">holdTime</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="math_number" id="26">
+                    <field name="NUM">3</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="controls_if" id="27">
+        <value name="IF0">
+          <block type="logic_compare" id="28">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="29">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="30">
+                    <field name="TEXT">audioFeedback</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="31">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="32">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="33">
+            <field name="VAR">global audioFeedback</field>
+            <value name="VALUE">
+              <block type="component_method" id="34">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="35">
+                    <field name="TEXT">audioFeedback</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="logic_boolean" id="36">
+                    <field name="BOOL">TRUE</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="controls_if" id="37">
+        <value name="IF0">
+          <block type="logic_compare" id="38">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="39">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="40">
+                    <field name="TEXT">modelURL</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="41">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="42">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="43">
+            <field name="VAR">global modelURL</field>
+            <value name="VALUE">
+              <block type="component_method" id="44">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="45">
+                    <field name="TEXT">modelURL</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="46">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="procedures_callnoreturn" id="47">
+        <mutation name="UpdatePoseImages"></mutation>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="48" x="20" y="550">
+    <mutation component_type="Button" instance_name="ButtonStartStop" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonStartStop</field>
+    <statement name="DO">
+      <block type="controls_if" id="49">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_not" id="50">
+            <value name="BOOL">
+              <block type="lexical_variable_get" id="51">
+                <field name="VAR">global isTraining</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="52">
+            <field name="VAR">global isTraining</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="53">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="54">
+            <mutation component_type="Button" set_or_get="set" property_name="Text" is_generic="false" instance_name="ButtonStartStop"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonStartStop</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text" id="55">
+                <field name="TEXT">Stop</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="56">
+            <mutation component_type="Button" set_or_get="set" property_name="BackgroundColor" is_generic="false" instance_name="ButtonStartStop"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonStartStop</field>
+            <field name="PROP">BackgroundColor</field>
+            <value name="VALUE">
+              <block type="color_red" id="57"></block>
+            </value>
+          </block>
+          <block type="component_method" id="58">
+            <mutation component_type="Camera" method_name="TakePicture" is_generic="false" instance_name="Camera1"></mutation>
+            <field name="COMPONENT_SELECTOR">Camera1</field>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="lexical_variable_set" id="59">
+            <field name="VAR">global isTraining</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="60">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="61">
+            <mutation component_type="Button" set_or_get="set" property_name="Text" is_generic="false" instance_name="ButtonStartStop"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonStartStop</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text" id="62">
+                <field name="TEXT">Start</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="63">
+            <mutation component_type="Button" set_or_get="set" property_name="BackgroundColor" is_generic="false" instance_name="ButtonStartStop"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonStartStop</field>
+            <field name="PROP">BackgroundColor</field>
+            <value name="VALUE">
+              <block type="color_green" id="64"></block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="65" x="20" y="800">
+    <mutation component_type="Button" instance_name="ButtonNextPose" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonNextPose</field>
+    <statement name="DO">
+      <block type="controls_if" id="66">
+        <value name="IF0">
+          <block type="logic_compare" id="67">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="68">
+                <field name="VAR">global currentPoseIndex</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="69">
+                <field name="NUM">3</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="70">
+            <field name="VAR">global currentPoseIndex</field>
+            <value name="VALUE">
+              <block type="math_add" id="71">
+                <mutation items="2"></mutation>
+                <value name="NUM0">
+                  <block type="lexical_variable_get" id="72">
+                    <field name="VAR">global currentPoseIndex</field>
+                  </block>
+                </value>
+                <value name="NUM1">
+                  <block type="math_number" id="73">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="74">
+            <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonPrevPose"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonPrevPose</field>
+            <field name="PROP">Enabled</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="75">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="controls_if" id="76">
+            <value name="IF0">
+              <block type="logic_compare" id="77">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="lexical_variable_get" id="78">
+                    <field name="VAR">global currentPoseIndex</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="79">
+                    <field name="NUM">3</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="component_set_get" id="80">
+                <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonNextPose"></mutation>
+                <field name="COMPONENT_SELECTOR">ButtonNextPose</field>
+                <field name="PROP">Enabled</field>
+                <value name="VALUE">
+                  <block type="logic_boolean" id="81">
+                    <field name="BOOL">FALSE</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+          <block type="procedures_callnoreturn" id="82">
+            <mutation name="UpdatePoseImages"></mutation>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="83" x="20" y="1050">
+    <mutation component_type="Button" instance_name="ButtonPrevPose" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonPrevPose</field>
+    <statement name="DO">
+      <block type="controls_if" id="84">
+        <value name="IF0">
+          <block type="logic_compare" id="85">
+            <field name="OP">GT</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="86">
+                <field name="VAR">global currentPoseIndex</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="87">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="88">
+            <field name="VAR">global currentPoseIndex</field>
+            <value name="VALUE">
+              <block type="math_subtract" id="89">
+                <value name="A">
+                  <block type="lexical_variable_get" id="90">
+                    <field name="VAR">global currentPoseIndex</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="91">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="92">
+            <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonNextPose"></mutation>
+            <field name="COMPONENT_SELECTOR">ButtonNextPose</field>
+            <field name="PROP">Enabled</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="93">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="controls_if" id="94">
+            <value name="IF0">
+              <block type="logic_compare" id="95">
+                <field name="OP">EQ</field>
+                <value name="A">
+                  <block type="lexical_variable_get" id="96">
+                    <field name="VAR">global currentPoseIndex</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="97">
+                    <field name="NUM">0</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="component_set_get" id="98">
+                <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonPrevPose"></mutation>
+                <field name="COMPONENT_SELECTOR">ButtonPrevPose</field>
+                <field name="PROP">Enabled</field>
+                <value name="VALUE">
+                  <block type="logic_boolean" id="99">
+                    <field name="BOOL">FALSE</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+          <block type="procedures_callnoreturn" id="100">
+            <mutation name="UpdatePoseImages"></mutation>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="101" x="500" y="20">
+    <field name="NAME">UpdatePoseImages</field>
+    <statement name="STACK">
+      <block type="component_set_get" id="102">
+        <mutation component_type="Image" set_or_get="set" property_name="Picture" is_generic="false" instance_name="ImageCurrentPose"></mutation>
+        <field name="COMPONENT_SELECTOR">ImageCurrentPose</field>
+        <field name="PROP">Picture</field>
+        <value name="VALUE">
+          <block type="text_join" id="103">
+            <mutation items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="104">
+                <field name="TEXT">pose</field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="math_add" id="105">
+                <mutation items="2"></mutation>
+                <value name="NUM0">
+                  <block type="lexical_variable_get" id="106">
+                    <field name="VAR">global currentPoseIndex</field>
+                  </block>
+                </value>
+                <value name="NUM1">
+                  <block type="math_number" id="107">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+      <block type="controls_if" id="108">
+        <value name="IF0">
+          <block type="logic_compare" id="109">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="110">
+                <field name="VAR">global currentPoseIndex</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_number" id="111">
+                <field name="NUM">3</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_set_get" id="112">
+            <mutation component_type="Image" set_or_get="set" property_name="Picture" is_generic="false" instance_name="ImageNextPose"></mutation>
+            <field name="COMPONENT_SELECTOR">ImageNextPose</field>
+            <field name="PROP">Picture</field>
+            <value name="VALUE">
+              <block type="text_join" id="113">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="114">
+                    <field name="TEXT">pose</field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="math_add" id="115">
+                    <mutation items="2"></mutation>
+                    <value name="NUM0">
+                      <block type="lexical_variable_get" id="116">
+                        <field name="VAR">global currentPoseIndex</field>
+                      </block>
+                    </value>
+                    <value name="NUM1">
+                      <block type="math_number" id="117">
+                        <field name="NUM">2</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <next>
+          <block type="component_set_get" id="118">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelPoseMatch"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelPoseMatch</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text" id="119">
+                <field name="TEXT">Pose Match: 0%</field>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="120" x="500" y="300">
+    <mutation component_type="Clock" instance_name="Clock1" event_name="Timer"></mutation>
+    <field name="COMPONENT_SELECTOR">Clock1</field>
+    <statement name="DO">
+      <block type="controls_if" id="121">
+        <value name="IF0">
+          <block type="lexical_variable_get" id="122">
+            <field name="VAR">global isTraining</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_method" id="123">
+            <mutation component_type="Camera" method_name="TakePicture" is_generic="false" instance_name="Camera1"></mutation>
+            <field name="COMPONENT_SELECTOR">Camera1</field>
+          </block>
+          <block type="lexical_variable_set" id="124">
+            <field name="VAR">global matchPercentage</field>
+            <value name="VALUE">
+              <block type="procedures_callreturn" id="125">
+                <mutation name="SimulatePoseMatch"></mutation>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="126">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelPoseMatch"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelPoseMatch</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text_join" id="127">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="128">
+                    <field name="TEXT">Pose Match: </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="text_join" id="129">
+                    <mutation items="2"></mutation>
+                    <value name="ADD0">
+                      <block type="lexical_variable_get" id="130">
+                        <field name="VAR">global matchPercentage</field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block type="text" id="131">
+                        <field name="TEXT">%</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+          <block type="controls_if" id="132">
+            <value name="IF0">
+              <block type="logic_compare" id="133">
+                <field name="OP">GTE</field>
+                <value name="A">
+                  <block type="lexical_variable_get" id="134">
+                    <field name="VAR">global matchPercentage</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="135">
+                    <field name="NUM">50</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="lexical_variable_set" id="136">
+                <field name="VAR">global currentHoldTime</field>
+                <value name="VALUE">
+                  <block type="math_add" id="137">
+                    <mutation items="2"></mutation>
+                    <value name="NUM0">
+                      <block type="lexical_variable_get" id="138">
+                        <field name="VAR">global currentHoldTime</field>
+                      </block>
+                    </value>
+                    <value name="NUM1">
+                      <block type="math_number" id="139">
+                        <field name="NUM">0.1</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+              <block type="component_set_get" id="140">
+                <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelPoseTime"></mutation>
+                <field name="COMPONENT_SELECTOR">LabelPoseTime</field>
+                <field name="PROP">Text</field>
+                <value name="VALUE">
+                  <block type="text_join" id="141">
+                    <mutation items="2"></mutation>
+                    <value name="ADD0">
+                      <block type="text" id="142">
+                        <field name="TEXT">Hold Time: </field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block type="text_join" id="143">
+                        <mutation items="2"></mutation>
+                        <value name="ADD0">
+                          <block type="math_format_as_decimal" id="144">
+                            <value name="NUM">
+                              <block type="lexical_variable_get" id="145">
+                                <field name="VAR">global currentHoldTime</field>
+                              </block>
+                            </value>
+                            <value name="PLACES">
+                              <block type="math_number" id="146">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="text" id="147">
+                            <field name="TEXT"> seconds</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+              <block type="controls_if" id="148">
+                <value name="IF0">
+                  <block type="logic_compare" id="149">
+                    <field name="OP">GTE</field>
+                    <value name="A">
+                      <block type="lexical_variable_get" id="150">
+                        <field name="VAR">global currentHoldTime</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="lexical_variable_get" id="151">
+                        <field name="VAR">global holdTime</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="controls_if" id="152">
+                    <value name="IF0">
+                      <block type="lexical_variable_get" id="153">
+                        <field name="VAR">global audioFeedback</field>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="component_method" id="154">
+                        <mutation component_type="Sound" method_name="Play" is_generic="false" instance_name="Sound1"></mutation>
+                        <field name="COMPONENT_SELECTOR">Sound1</field>
+                      </block>
+                    </statement>
+                  </block>
+                  <block type="lexical_variable_set" id="155">
+                    <field name="VAR">global currentHoldTime</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="156">
+                        <field name="NUM">0</field>
+                      </block>
+                    </value>
+                  </block>
+                  <block type="component_method" id="157">
+                    <mutation component_type="Notifier" method_name="ShowMessageDialog" is_generic="true"></mutation>
+                    <field name="COMPONENT_SELECTOR">Notifier</field>
+                    <value name="ARG0">
+                      <block type="text_join" id="158">
+                        <mutation items="2"></mutation>
+                        <value name="ADD0">
+                          <block type="text" id="159">
+                            <field name="TEXT">Pose </field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="math_add" id="160">
+                            <mutation items="2"></mutation>
+                            <value name="NUM0">
+                              <block type="lexical_variable_get" id="161">
+                                <field name="VAR">global currentPoseIndex</field>
+                              </block>
+                            </value>
+                            <value name="NUM1">
+                              <block type="math_number" id="162">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="ARG1">
+                      <block type="text" id="163">
+                        <field name="TEXT">Great job! Move to the next pose.</field>
+                      </block>
+                    </value>
+                    <value name="ARG2">
+                      <block type="text" id="164">
+                        <field name="TEXT">OK</field>
+                      </block>
+                    </value>
+                  </block>
+                  <block type="controls_if" id="165">
+                    <value name="IF0">
+                      <block type="logic_compare" id="166">
+                        <field name="OP">LT</field>
+                        <value name="A">
+                          <block type="lexical_variable_get" id="167">
+                            <field name="VAR">global currentPoseIndex</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id="168">
+                            <field name="NUM">3</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="lexical_variable_set" id="169">
+                        <field name="VAR">global currentPoseIndex</field>
+                        <value name="VALUE">
+                          <block type="math_add" id="170">
+                            <mutation items="2"></mutation>
+                            <value name="NUM0">
+                              <block type="lexical_variable_get" id="171">
+                                <field name="VAR">global currentPoseIndex</field>
+                              </block>
+                            </value>
+                            <value name="NUM1">
+                              <block type="math_number" id="172">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                      <block type="component_set_get" id="173">
+                        <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonPrevPose"></mutation>
+                        <field name="COMPONENT_SELECTOR">ButtonPrevPose</field>
+                        <field name="PROP">Enabled</field>
+                        <value name="VALUE">
+                          <block type="logic_boolean" id="174">
+                            <field name="BOOL">TRUE</field>
+                          </block>
+                        </value>
+                      </block>
+                      <block type="controls_if" id="175">
+                        <value name="IF0">
+                          <block type="logic_compare" id="176">
+                            <field name="OP">EQ</field>
+                            <value name="A">
+                              <block type="lexical_variable_get" id="177">
+                                <field name="VAR">global currentPoseIndex</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="math_number" id="178">
+                                <field name="NUM">3</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <statement name="DO0">
+                          <block type="component_set_get" id="179">
+                            <mutation component_type="Button" set_or_get="set" property_name="Enabled" is_generic="false" instance_name="ButtonNextPose"></mutation>
+                            <field name="COMPONENT_SELECTOR">ButtonNextPose</field>
+                            <field name="PROP">Enabled</field>
+                            <value name="VALUE">
+                              <block type="logic_boolean" id="180">
+                                <field name="BOOL">FALSE</field>
+                              </block>
+                            </value>
+                          </block>
+                        </statement>
+                      </block>
+                      <block type="procedures_callnoreturn" id="181">
+                        <mutation name="UpdatePoseImages"></mutation>
+                      </block>
+                    </statement>
+                  </block>
+                </statement>
+              </block>
+            </statement>
+            <next>
+              <block type="controls_if" id="182">
+                <value name="IF0">
+                  <block type="logic_compare" id="183">
+                    <field name="OP">LT</field>
+                    <value name="A">
+                      <block type="lexical_variable_get" id="184">
+                        <field name="VAR">global matchPercentage</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="math_number" id="185">
+                        <field name="NUM">50</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="lexical_variable_set" id="186">
+                    <field name="VAR">global currentHoldTime</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="187">
+                        <field name="NUM">0</field>
+                      </block>
+                    </value>
+                  </block>
+                  <block type="component_set_get" id="188">
+                    <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelPoseTime"></mutation>
+                    <field name="COMPONENT_SELECTOR">LabelPoseTime</field>
+                    <field name="PROP">Text</field>
+                    <value name="VALUE">
+                      <block type="text" id="189">
+                        <field name="TEXT">Hold Time: 0 seconds</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defreturn" id="190" x="500" y="1000">
+    <field name="NAME">SimulatePoseMatch</field>
+    <statement name="STACK">
+      <block type="controls_if" id="191">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="192">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="lexical_variable_get" id="193">
+                <field name="VAR">global modelURL</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="194">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="195">
+            <field name="VAR">local jsAvailable</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="196">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="lexical_variable_set" id="197">
+            <field name="VAR">local jsAvailable</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="198">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="controls_if" id="199">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="lexical_variable_get" id="200">
+            <field name="VAR">local jsAvailable</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="controls_if" id="201">
+            <mutation else="1"></mutation>
+            <value name="IF0">
+              <block type="logic_compare" id="202">
+                <field name="OP">GTE</field>
+                <value name="A">
+                  <block type="math_random_int" id="203">
+                    <value name="FROM">
+                      <block type="math_number" id="204">
+                        <field name="NUM">1</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="205">
+                        <field name="NUM">100</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="206">
+                    <field name="NUM">60</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="lexical_variable_set" id="207">
+                <field name="VAR">local match</field>
+                <value name="VALUE">
+                  <block type="math_random_int" id="208">
+                    <value name="FROM">
+                      <block type="math_number" id="209">
+                        <field name="NUM">50</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="210">
+                        <field name="NUM">100</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <statement name="ELSE">
+              <block type="lexical_variable_set" id="211">
+                <field name="VAR">local match</field>
+                <value name="VALUE">
+                  <block type="math_random_int" id="212">
+                    <value name="FROM">
+                      <block type="math_number" id="213">
+                        <field name="NUM">10</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="214">
+                        <field name="NUM">45</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="controls_if" id="215">
+            <mutation else="1"></mutation>
+            <value name="IF0">
+              <block type="logic_compare" id="216">
+                <field name="OP">GTE</field>
+                <value name="A">
+                  <block type="math_random_int" id="217">
+                    <value name="FROM">
+                      <block type="math_number" id="218">
+                        <field name="NUM">1</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="219">
+                        <field name="NUM">100</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="220">
+                    <field name="NUM">30</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="lexical_variable_set" id="221">
+                <field name="VAR">local match</field>
+                <value name="VALUE">
+                  <block type="math_random_int" id="222">
+                    <value name="FROM">
+                      <block type="math_number" id="223">
+                        <field name="NUM">50</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="224">
+                        <field name="NUM">100</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <statement name="ELSE">
+              <block type="lexical_variable_set" id="225">
+                <field name="VAR">local match</field>
+                <value name="VALUE">
+                  <block type="math_random_int" id="226">
+                    <value name="FROM">
+                      <block type="math_number" id="227">
+                        <field name="NUM">10</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="math_number" id="228">
+                        <field name="NUM">45</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="RETURN">
+      <block type="lexical_variable_get" id="229">
+        <field name="VAR">local match</field>
+      </block>
+    </value>
+  </block>
+</xml>

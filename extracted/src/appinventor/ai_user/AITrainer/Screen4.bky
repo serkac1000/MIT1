@@ -1,0 +1,316 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="1" x="20" y="20">
+    <mutation component_type="Button" instance_name="ButtonBack" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonBack</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="2">
+        <value name="SCREEN">
+          <block type="text" id="3">
+            <field name="TEXT">Screen1</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="4" x="20" y="100">
+    <mutation component_type="Form" instance_name="Screen4" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen4</field>
+    <statement name="DO">
+      <block type="controls_if" id="5">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="6">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="7">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="8">
+                    <field name="TEXT">lastSession</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="9">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="10">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_set_get" id="11">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelNoResults"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelNoResults</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="12">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="13">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelLastSession"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelLastSession</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="14">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="15">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDate"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDate</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="16">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="17">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDuration"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDuration</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="18">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="19">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelPosesCompleted"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelPosesCompleted</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="20">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="21">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelDate"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDate</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text_join" id="22">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="23">
+                    <field name="TEXT">Date: </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="component_method" id="24">
+                    <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                    <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                    <value name="ARG0">
+                      <block type="text" id="25">
+                        <field name="TEXT">lastSessionDate</field>
+                      </block>
+                    </value>
+                    <value name="ARG1">
+                      <block type="text" id="26">
+                        <field name="TEXT">--</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="27">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelDuration"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDuration</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text_join" id="28">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="29">
+                    <field name="TEXT">Duration: </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="component_method" id="30">
+                    <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                    <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                    <value name="ARG0">
+                      <block type="text" id="31">
+                        <field name="TEXT">lastSessionDuration</field>
+                      </block>
+                    </value>
+                    <value name="ARG1">
+                      <block type="text" id="32">
+                        <field name="TEXT">--</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="33">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LabelPosesCompleted"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelPosesCompleted</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="text_join" id="34">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="35">
+                    <field name="TEXT">Poses Completed: </field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="component_method" id="36">
+                    <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                    <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                    <value name="ARG0">
+                      <block type="text" id="37">
+                        <field name="TEXT">lastSessionPoses</field>
+                      </block>
+                    </value>
+                    <value name="ARG1">
+                      <block type="text" id="38">
+                        <field name="TEXT">--</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="component_set_get" id="39">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelNoResults"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelNoResults</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="40">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="41">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelLastSession"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelLastSession</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="42">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="43">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDate"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDate</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="44">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="45">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDuration"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelDuration</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="46">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+          <block type="component_set_get" id="47">
+            <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelPosesCompleted"></mutation>
+            <field name="COMPONENT_SELECTOR">LabelPosesCompleted</field>
+            <field name="PROP">Visible</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="48">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="49" x="20" y="650">
+    <mutation component_type="Button" instance_name="ButtonClearResults" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonClearResults</field>
+    <statement name="DO">
+      <block type="component_method" id="50">
+        <mutation component_type="TinyDB" method_name="ClearAll" is_generic="false" instance_name="TinyDB1"></mutation>
+        <field name="COMPONENT_SELECTOR">TinyDB1</field>
+      </block>
+      <block type="component_set_get" id="51">
+        <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelNoResults"></mutation>
+        <field name="COMPONENT_SELECTOR">LabelNoResults</field>
+        <field name="PROP">Visible</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="52">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_set_get" id="53">
+        <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelLastSession"></mutation>
+        <field name="COMPONENT_SELECTOR">LabelLastSession</field>
+        <field name="PROP">Visible</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="54">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_set_get" id="55">
+        <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDate"></mutation>
+        <field name="COMPONENT_SELECTOR">LabelDate</field>
+        <field name="PROP">Visible</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="56">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_set_get" id="57">
+        <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelDuration"></mutation>
+        <field name="COMPONENT_SELECTOR">LabelDuration</field>
+        <field name="PROP">Visible</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="58">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_set_get" id="59">
+        <mutation component_type="Label" set_or_get="set" property_name="Visible" is_generic="false" instance_name="LabelPosesCompleted"></mutation>
+        <field name="COMPONENT_SELECTOR">LabelPosesCompleted</field>
+        <field name="PROP">Visible</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="60">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_method" id="61">
+        <mutation component_type="Notifier" method_name="ShowAlert" is_generic="true"></mutation>
+        <field name="COMPONENT_SELECTOR">Notifier</field>
+        <value name="ARG0">
+          <block type="text" id="62">
+            <field name="TEXT">Results cleared successfully!</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+</xml>

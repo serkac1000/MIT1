@@ -1,0 +1,41 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="1" x="22" y="28">
+    <mutation component_type="Button" instance_name="ButtonStartTraining" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonStartTraining</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="2">
+        <value name="SCREEN">
+          <block type="text" id="3">
+            <field name="TEXT">Screen3</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="4" x="22" y="108">
+    <mutation component_type="Button" instance_name="ButtonSettings" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSettings</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="5">
+        <value name="SCREEN">
+          <block type="text" id="6">
+            <field name="TEXT">Screen2</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="7" x="22" y="188">
+    <mutation component_type="Button" instance_name="ButtonViewResults" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonViewResults</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="8">
+        <value name="SCREEN">
+          <block type="text" id="9">
+            <field name="TEXT">Screen4</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+</xml>

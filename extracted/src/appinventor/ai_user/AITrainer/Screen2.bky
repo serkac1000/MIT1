@@ -1,0 +1,277 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="1" x="20" y="20">
+    <mutation component_type="Button" instance_name="ButtonBack" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonBack</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreen" id="2">
+        <value name="SCREEN">
+          <block type="text" id="3">
+            <field name="TEXT">Screen1</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="4" x="20" y="100">
+    <mutation component_type="Form" instance_name="Screen2" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen2</field>
+    <statement name="DO">
+      <block type="controls_if" id="5">
+        <value name="IF0">
+          <block type="logic_compare" id="6">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="7">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="8">
+                    <field name="TEXT">modelURL</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="9">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="10">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_set_get" id="11">
+            <mutation component_type="TextBox" set_or_get="set" property_name="Text" is_generic="false" instance_name="TextBoxModelURL"></mutation>
+            <field name="COMPONENT_SELECTOR">TextBoxModelURL</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="component_method" id="12">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="13">
+                    <field name="TEXT">modelURL</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="14">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="controls_if" id="15">
+        <value name="IF0">
+          <block type="logic_compare" id="16">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="17">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="18">
+                    <field name="TEXT">audioFeedback</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="19">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="20">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_set_get" id="21">
+            <mutation component_type="Switch" set_or_get="set" property_name="On" is_generic="false" instance_name="SwitchAudioFeedback"></mutation>
+            <field name="COMPONENT_SELECTOR">SwitchAudioFeedback</field>
+            <field name="PROP">On</field>
+            <value name="VALUE">
+              <block type="component_method" id="22">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="23">
+                    <field name="TEXT">audioFeedback</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="logic_boolean" id="24">
+                    <field name="BOOL">TRUE</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+      <block type="controls_if" id="25">
+        <value name="IF0">
+          <block type="logic_compare" id="26">
+            <field name="OP">NEQ</field>
+            <value name="A">
+              <block type="component_method" id="27">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="28">
+                    <field name="TEXT">holdTime</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="29">
+                    <field name="TEXT"></field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text" id="30">
+                <field name="TEXT"></field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="component_set_get" id="31">
+            <mutation component_type="ListPicker" set_or_get="set" property_name="Selection" is_generic="false" instance_name="ListPickerHoldTime"></mutation>
+            <field name="COMPONENT_SELECTOR">ListPickerHoldTime</field>
+            <field name="PROP">Selection</field>
+            <value name="VALUE">
+              <block type="component_method" id="32">
+                <mutation component_type="TinyDB" method_name="GetValue" is_generic="false" instance_name="TinyDB1"></mutation>
+                <field name="COMPONENT_SELECTOR">TinyDB1</field>
+                <value name="ARG0">
+                  <block type="text" id="33">
+                    <field name="TEXT">holdTime</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="text" id="34">
+                    <field name="TEXT">3</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="35" x="20" y="500">
+    <mutation component_type="Button" instance_name="ButtonSelectPose1" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSelectPose1</field>
+    <statement name="DO">
+      <block type="component_method" id="36">
+        <mutation component_type="ImagePicker" method_name="Open" is_generic="false" instance_name="ImagePicker"></mutation>
+        <field name="COMPONENT_SELECTOR">ImagePicker</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="37" x="20" y="580">
+    <mutation component_type="Button" instance_name="ButtonSelectPose2" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSelectPose2</field>
+    <statement name="DO">
+      <block type="component_method" id="38">
+        <mutation component_type="ImagePicker" method_name="Open" is_generic="false" instance_name="ImagePicker"></mutation>
+        <field name="COMPONENT_SELECTOR">ImagePicker</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="39" x="20" y="660">
+    <mutation component_type="Button" instance_name="ButtonSelectPose3" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSelectPose3</field>
+    <statement name="DO">
+      <block type="component_method" id="40">
+        <mutation component_type="ImagePicker" method_name="Open" is_generic="false" instance_name="ImagePicker"></mutation>
+        <field name="COMPONENT_SELECTOR">ImagePicker</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="41" x="20" y="740">
+    <mutation component_type="Button" instance_name="ButtonSelectPose4" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSelectPose4</field>
+    <statement name="DO">
+      <block type="component_method" id="42">
+        <mutation component_type="ImagePicker" method_name="Open" is_generic="false" instance_name="ImagePicker"></mutation>
+        <field name="COMPONENT_SELECTOR">ImagePicker</field>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="43" x="20" y="820">
+    <mutation component_type="Button" instance_name="ButtonSaveSettings" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">ButtonSaveSettings</field>
+    <statement name="DO">
+      <block type="component_method" id="44">
+        <mutation component_type="TinyDB" method_name="StoreValue" is_generic="false" instance_name="TinyDB1"></mutation>
+        <field name="COMPONENT_SELECTOR">TinyDB1</field>
+        <value name="ARG0">
+          <block type="text" id="45">
+            <field name="TEXT">modelURL</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_set_get" id="46">
+            <mutation component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="TextBoxModelURL"></mutation>
+            <field name="COMPONENT_SELECTOR">TextBoxModelURL</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_method" id="47">
+        <mutation component_type="TinyDB" method_name="StoreValue" is_generic="false" instance_name="TinyDB1"></mutation>
+        <field name="COMPONENT_SELECTOR">TinyDB1</field>
+        <value name="ARG0">
+          <block type="text" id="48">
+            <field name="TEXT">audioFeedback</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_set_get" id="49">
+            <mutation component_type="Switch" set_or_get="get" property_name="On" is_generic="false" instance_name="SwitchAudioFeedback"></mutation>
+            <field name="COMPONENT_SELECTOR">SwitchAudioFeedback</field>
+            <field name="PROP">On</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_method" id="50">
+        <mutation component_type="TinyDB" method_name="StoreValue" is_generic="false" instance_name="TinyDB1"></mutation>
+        <field name="COMPONENT_SELECTOR">TinyDB1</field>
+        <value name="ARG0">
+          <block type="text" id="51">
+            <field name="TEXT">holdTime</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_set_get" id="52">
+            <mutation component_type="ListPicker" set_or_get="get" property_name="Selection" is_generic="false" instance_name="ListPickerHoldTime"></mutation>
+            <field name="COMPONENT_SELECTOR">ListPickerHoldTime</field>
+            <field name="PROP">Selection</field>
+          </block>
+        </value>
+      </block>
+      <block type="component_method" id="53">
+        <mutation component_type="Notifier" method_name="ShowAlert" is_generic="true"></mutation>
+        <field name="COMPONENT_SELECTOR">Notifier</field>
+        <value name="ARG0">
+          <block type="text" id="54">
+            <field name="TEXT">Settings saved successfully!</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+</xml>
